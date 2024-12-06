@@ -1,0 +1,12 @@
+# Jetbrains project files
+/.idea/
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Mac DS_Store Files
+/.DS_Store/
+
+#project files
+!/media/
+playlist.csv
