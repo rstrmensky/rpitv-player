@@ -9,4 +9,5 @@ Thumbs.db
 
 #project files
 !/media/
+/media/*
 playlist.csv
