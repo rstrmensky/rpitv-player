@@ -25,3 +25,4 @@ else:
                 player = ImagePlayer()
                 player.set_asset(item['file_path'], item['display_time'])
                 player.play()
+                player.stop()
