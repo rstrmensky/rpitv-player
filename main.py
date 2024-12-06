@@ -1,4 +1,3 @@
-from lib.player import Player
 from lib.playlist import Playlist
 from lib.player import Player
 import subprocess
