@@ -1,0 +1,17 @@
+# Jetbrains project files
+/.idea/
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Mac DS_Store Files
+/.DS_Store/
+
+# Python venv
+/.venv/
+
+# Project files
+/lib/__pycache__/
+!/media/
+/media/*
+screenshot.png
