@@ -30,12 +30,12 @@ lib_playlist = Playlist()
 
 if settings_conf.getboolean('SETTINGS', 'use_offline'):
     log.debug("Player is in offline mode")
-    while True:
-        play()
+    play()
 else:
     log.debug("Player is in online mode")
     lib_api = API()
 
+    player = None
     last_playlist_hash = None
     first_time = True
     while True:
@@ -51,9 +51,10 @@ else:
             new_playlist_hash = hash(playlist_media)
             log.debug(f"Playlist last hash: {last_playlist_hash}")
             log.debug(f"New playlist hash: {new_playlist_hash}")
-            player = play()
 
             if first_time:
+                player = play()
+
                 time.sleep(2)
             else:
                 time.sleep(120)  # 120 seconds = 2min
@@ -70,5 +71,6 @@ else:
                     last_playlist_hash = new_playlist_hash
                     player = play()
         else:
-            log.debug("Internet connection is offline, using offline player")
-            play()
+            if not player:
+                log.debug("Internet connection is offline, using offline player")
+                player = play()
