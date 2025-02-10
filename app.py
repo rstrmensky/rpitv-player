@@ -27,10 +27,10 @@ lib_display = Display()
 lib_playlist = Playlist()
 
 if settings_conf.getboolean('SETTINGS', 'use_offline'):
-    log.debug("Player::offline mode")
+    log.info("Player::offline mode")
     play()
 else:
-    log.debug("Player::online mode")
+    log.info("Player::online mode")
     lib_api = API()
 
     player = None
@@ -38,7 +38,7 @@ else:
     first_time = True
     while True:
         if lib_api.check_internet():
-            log.debug("Internet::online")
+            log.info("Internet::online")
 
             lib_display.display_sync()
             lib_playlist.playlist_sync()
@@ -70,6 +70,6 @@ else:
                     last_playlist_hash = new_playlist_hash
                     player = play()
         else:
-            log.debug("Internet::offline")
+            log.info("Internet::offline")
             if not player:
                 player = play()
