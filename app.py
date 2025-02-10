@@ -1,4 +1,6 @@
 from configparser import ConfigParser
+from operator import truediv
+
 from lib.playlist import Playlist
 from lib.display import Display
 from lib.logger import log
@@ -28,30 +30,17 @@ lib_playlist = Playlist()
 
 if settings_conf.getboolean('SETTINGS', 'use_offline'):
     log.debug("Player is in offline mode")
-    play()
+    while True:
+        play()
 else:
     log.debug("Player is in online mode")
     lib_api = API()
 
-    if lib_api.check_internet():
-        log.debug("Internet connection is online")
-
-        lib_display.display_sync()
-        lib_playlist.playlist_sync()
-
-        display_data = lib_display.display_load()
-        playlist_media = lib_playlist.playlist_load()
-
-        last_playlist_hash = hash(playlist_media)
-        log.debug(f"Playlist last hash: {last_playlist_hash}")
-        player = play()
-
-        time.sleep(1)
-        lib_api.set_screenshot()
-
-        while True:
-            time.sleep(120) # 120 seconds = 2min
-            lib_api.set_screenshot()
+    last_playlist_hash = None
+    first_time = True
+    while True:
+        if lib_api.check_internet():
+            log.debug("Internet connection is online")
 
             lib_display.display_sync()
             lib_playlist.playlist_sync()
@@ -60,15 +49,26 @@ else:
             playlist_media = lib_playlist.playlist_load()
 
             new_playlist_hash = hash(playlist_media)
+            log.debug(f"Playlist last hash: {last_playlist_hash}")
             log.debug(f"New playlist hash: {new_playlist_hash}")
+            player = play()
 
-            if new_playlist_hash != last_playlist_hash:
-                player.terminate()
-                player.wait()
+            if first_time:
+                time.sleep(2)
+            else:
+                time.sleep(120)  # 120 seconds = 2min
 
-                last_playlist_hash = new_playlist_hash
-                player = play()
+            lib_api.set_screenshot()
 
-    else:
-        log.debug("Internet connection is offline, using offline player")
-        play()
+            if first_time:
+                first_time = False
+            else:
+                if new_playlist_hash != last_playlist_hash:
+                    player.terminate()
+                    player.wait()
+
+                    last_playlist_hash = new_playlist_hash
+                    player = play()
+        else:
+            log.debug("Internet connection is offline, using offline player")
+            play()

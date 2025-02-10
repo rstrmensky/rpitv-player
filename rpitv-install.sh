@@ -7,7 +7,7 @@ sudo apt upgrade -y
 
 # Install necessary packages
 echo "Installing necessary packages..."
-sudo apt install git mc xorg scrot python3 feh mpv -y
+sudo apt install git mc xorg xterm scrot python3 feh mpv -y
 
 # Pulling app from git
 echo "Pulling app from git"
@@ -68,6 +68,20 @@ Section "ServerFlags"
 EndSection
 EOF'
 
+# Set Xinit configuration
+sudo bash -c 'cat > /home/pi/.xinitrc <<EOF
+# .xinitrc
+
+# Set environment variables
+export DISPLAY=:0
+
+# Start background processes
+xsetroot -solid black &
+
+# Run a specific application, e.g., xterm
+exec xterm -bg black
+EOF'
+
 # Reload systemd to apply the new service
 echo "Reloading systemd..."
 sudo systemctl daemon-reload
@@ -77,11 +91,8 @@ echo "Enabling services..."
 sudo systemctl enable x11.service
 sudo systemctl enable rpitv.service
 
-# Enable Xauthority for Xorg
-export XAUTHORITY=$HOME/.Xauthority
-
 # Wait for key press and then reboot
 echo "Installation complete. Press any key to reboot..."
-echo "Don't forget to update config.ini file in conf folder to set licence."
+echo "Don't forget to update app.ini file in conf folder to set api data."
 read -p " "
 sudo reboot
