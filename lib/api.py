@@ -52,9 +52,9 @@ class API:
         except requests.HTTPError as http_err:
             log.error(f"API.do_request::HTTP error occurred: {http_err}")
         except requests.Timeout as timeout_err:
-            log.error(f"API.do_request::Timeout error occurred: {timeout_err}")
+            log.error(f"API.do_request::timeout error occurred: {timeout_err}")
         except requests.RequestException as req_err:
-            log.error(f"API.do_request::Request error occurred: {req_err}")
+            log.error(f"API.do_request::request error occurred: {req_err}")
         else:
-            log.debug(f"API.do_request::Request status: {response.status_code} ")
+            log.debug(f"API.do_request::request status: {response.status_code} ")
             return response.json()
