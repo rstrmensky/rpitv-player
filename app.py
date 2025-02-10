@@ -1,6 +1,4 @@
 from configparser import ConfigParser
-from operator import truediv
-
 from lib.playlist import Playlist
 from lib.display import Display
 from lib.logger import log
@@ -10,7 +8,7 @@ import hashlib
 import time
 import os
 
-# Prepare app for run
+log.info("Player V2 started")
 os.system('export DISPLAY=:0')
 
 settings_conf = ConfigParser()
@@ -29,10 +27,10 @@ lib_display = Display()
 lib_playlist = Playlist()
 
 if settings_conf.getboolean('SETTINGS', 'use_offline'):
-    log.debug("Player is in offline mode")
+    log.debug("Player::offline mode")
     play()
 else:
-    log.debug("Player is in online mode")
+    log.debug("Player::online mode")
     lib_api = API()
 
     player = None
@@ -40,7 +38,7 @@ else:
     first_time = True
     while True:
         if lib_api.check_internet():
-            log.debug("Internet connection is online")
+            log.debug("Internet::online")
 
             lib_display.display_sync()
             lib_playlist.playlist_sync()
@@ -49,8 +47,8 @@ else:
             playlist_media = lib_playlist.playlist_load()
 
             new_playlist_hash = hash(playlist_media)
-            log.debug(f"Playlist last hash: {last_playlist_hash}")
-            log.debug(f"New playlist hash: {new_playlist_hash}")
+            log.debug(f"Playlist::last hash: {last_playlist_hash}")
+            log.debug(f"Playlist::new hash: {new_playlist_hash}")
 
             if first_time:
                 player = play()
@@ -72,6 +70,6 @@ else:
                     last_playlist_hash = new_playlist_hash
                     player = play()
         else:
+            log.debug("Internet::offline")
             if not player:
-                log.debug("Internet connection is offline, using offline player")
                 player = play()

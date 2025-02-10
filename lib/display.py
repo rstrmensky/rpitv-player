@@ -11,19 +11,16 @@ class Display:
         self.dir_media = settings_conf.get('SETTINGS', 'dir_media')
 
     def display_load(self):
-        log.info('Display load started...')
-
         self.db_conn = sqlite3.connect(self.db_app)
         self.db = self.db_conn.cursor()
         self.db.execute('SELECT window_width, window_height, x_axis, y_axis FROM display')
         display_data = self.db.fetchone()
         self.db.close()
 
-        log.info('Display load end...')
+        log.debug('Display.display_load::done')
         return display_data
 
     def display_sync(self):
-        log.info('Display sync started...')
         lib_api = API()
         display_data = lib_api.get_display()
 
@@ -38,4 +35,4 @@ class Display:
 
         self.db_conn.commit()
         self.db_conn.close()
-        log.info('Display sync end...')
+        log.debug('Display.display_sync::done')

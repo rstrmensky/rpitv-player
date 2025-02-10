@@ -30,19 +30,19 @@ class API:
     def set_screenshot(self):
         file_screenshot = os.path.realpath("screenshot.jpg")
         file_screenshot_thumb = os.path.realpath("screenshot-thumb.jpg")
-        log.debug(f"Screenshot path: {file_screenshot}")
+
         subprocess.run(f"scrot -o -q 40 -t 30 {file_screenshot}", shell=True)
         with open(file_screenshot_thumb, "rb") as file:
             self.screenshot = base64.b64encode(file.read()).decode('utf-8')
         response = self.do_request('set-screenshot')
+
         os.system(f"sudo rm {file_screenshot}")
         os.system(f"sudo rm {file_screenshot_thumb}")
         return response
 
     def do_request(self, request_type):
-        log.info(f"API.request::Calling from {request_type}")
+        log.debug(f"API.do_request::request type: {request_type}")
         try:
-            log.debug(f"API.request::Sending request: {request_type}, licence_token: {self.licence}, rpi_token: {self.display}")
             response = requests.post(f"{self.url}/{request_type}", {
                 'licence_token': self.licence,
                 'rpi_token': self.display,
@@ -50,11 +50,11 @@ class API:
             })
             response.raise_for_status()
         except requests.HTTPError as http_err:
-            log.error(f"API.request::HTTP error occurred: {http_err}")
+            log.error(f"API.do_request::HTTP error occurred: {http_err}")
         except requests.Timeout as timeout_err:
-            log.error(f"API.request::Timeout error occurred: {timeout_err}")
+            log.error(f"API.do_request::Timeout error occurred: {timeout_err}")
         except requests.RequestException as req_err:
-            log.error(f"API.request::Request error occurred: {req_err}")
+            log.error(f"API.do_request::Request error occurred: {req_err}")
         else:
-            log.debug(f"API.request::Request status: {response.status_code} ")
+            log.debug(f"API.do_request::Request status: {response.status_code} ")
             return response.json()

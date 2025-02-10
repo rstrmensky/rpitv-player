@@ -13,19 +13,16 @@ class Playlist:
         self.dir_media = settings_conf.get('SETTINGS', 'dir_media')
 
     def playlist_load(self):
-        log.info('Playlist load started...')
-
         self.db_conn = sqlite3.connect(self.db_app)
         self.db = self.db_conn.cursor()
         self.db.execute('SELECT media_type, file_path, display_time, display_order FROM playlist')
         playlist_media = self.db.fetchall()
         self.db.close()
 
-        log.info('Playlist load end...')
+        log.info('Playlist.playlist_load::done')
         return playlist_media
 
     def playlist_sync(self):
-        log.info('Playlist sync started...')
         lib_api = API()
         playlist_media = lib_api.get_playlist()
 
@@ -64,4 +61,4 @@ class Playlist:
 
         self.db_conn.commit()
         self.db_conn.close()
-        log.info('Playlist sync end...')
+        log.debug('Playlist.playlist_sync::done')
