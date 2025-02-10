@@ -63,6 +63,7 @@ else:
 
             if first_time:
                 first_time = False
+                last_playlist_hash = new_playlist_hash
             else:
                 if new_playlist_hash != last_playlist_hash:
                     player.terminate()
