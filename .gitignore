@@ -11,7 +11,6 @@ Thumbs.db
 /.venv/
 
 # Project files
+/dev/
 /lib/__pycache__/
-!/media/
-/media/*
 screenshot.png

@@ -14,12 +14,8 @@ class API:
         self.display = app_conf.get('API', 'rpi_token')
         self.screenshot = None
 
-    def check_internet(self):
-        try:
-            response = requests.get('http://www.google.com', timeout=5)
-            return True if response.status_code == 200 else False
-        except requests.ConnectionError:
-            return False
+    def check_update(self):
+        return self.do_request('check-update')
 
     def get_display(self):
         return self.do_request('get-display')
@@ -44,9 +40,9 @@ class API:
         log.debug(f"API.do_request::request type: {request_type}")
         try:
             response = requests.post(f"{self.url}/{request_type}", {
-                'licence_token': self.licence,
-                'rpi_token': self.display,
-                'screenshot': self.screenshot
+                'Api[licence_key]': self.licence,
+                'Api[display_key]': self.display,
+                'Api[screenshot]': self.screenshot
             })
             response.raise_for_status()
         except requests.HTTPError as http_err:
@@ -55,6 +51,6 @@ class API:
             log.error(f"API.do_request::timeout error occurred: {timeout_err}")
         except requests.RequestException as req_err:
             log.error(f"API.do_request::request error occurred: {req_err}")
-        else:
+        finally:
             log.debug(f"API.do_request::request status: {response.status_code} ")
             return response.json()

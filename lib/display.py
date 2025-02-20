@@ -24,15 +24,20 @@ class Display:
         lib_api = API()
         display_data = lib_api.get_display()
 
-        self.db_conn = sqlite3.connect(self.db_app)
-        self.db = self.db_conn.cursor()
+        if display_data:
+            self.db_conn = sqlite3.connect(self.db_app)
+            self.db = self.db_conn.cursor()
 
-        self.db.execute('DELETE FROM display')
+            self.db.execute('DELETE FROM display')
 
-        self.db.execute(
-            'INSERT INTO display (id, window_width, window_height, x_axis, y_axis) VALUES (?, ?, ?, ?, ?)',
-            (1, display_data['display_width'], display_data['display_height'], display_data['display_x'], display_data['display_y']))
+            self.db.execute(
+                'INSERT INTO display (id, window_width, window_height, x_axis, y_axis) VALUES (?, ?, ?, ?, ?)',
+                (1, display_data['layout_width'], display_data['layout_height'], display_data['axis_x'], display_data['axis_y']))
 
-        self.db_conn.commit()
-        self.db_conn.close()
-        log.debug('Display.display_sync::done')
+            self.db_conn.commit()
+            self.db_conn.close()
+            log.debug('Display.display_sync::done')
+        else:
+            log.debug('Display.display_sync::error')
+
+        return self.display_load()
