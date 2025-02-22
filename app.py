@@ -44,6 +44,7 @@ if not settings_conf.getboolean('SETTINGS', 'use_offline'):
     if not display_data and not playlist_media:
         last_playlist_hash = hash(playlist_media)
 
+        lib_api.set_display()
         display_data = lib_display.display_sync()
         playlist_media = lib_playlist.playlist_sync()
 
